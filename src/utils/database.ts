@@ -1,7 +1,7 @@
-import sql, { config } from "mssql";
+import sql from "mssql";
 import "dotenv/config";
 
-const config: config = {
+const config: sql.config = {
 	user: process.env.DB_USR,
 	password: process.env.DB_PWD,
 	database: process.env.DB_NAME,
@@ -12,4 +12,4 @@ const config: config = {
 	},
 };
 
-export default async () => (await sql.connect(config)).request();
+export default config;

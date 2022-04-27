@@ -1,15 +1,15 @@
-import { Router } from "express";
+import {Router } from "express";
 import bodyParser from "body-parser";
 import { Personaje } from "../models/personaje";
 import { create, deleteById, getAll, getById, update } from "../services/personajeService";
-import { IRecordSet } from "mssql";
 
 const router = Router();
 const jsonParser = bodyParser.json();
 
 router.get("/", async (req, res) => {
 	try {
-		const personajes: IRecordSet<Personaje> = await getAll();
+		console.log(req);
+		const personajes: Personaje[] = await getAll(req.app?.locals.db);
 		res.status(200).json(personajes);
 	} catch (err) {
 		console.log(err);
@@ -26,7 +26,7 @@ router.get("/:id", async (req, res) => {
 			return;
 		}
 
-		const personaje: IRecordSet<Personaje> = await getById(id);
+		const personaje: Personaje = await getById(req.app?.locals.db, id);
 		res.status(200).json(personaje);
 	} catch (err) {
 		console.log(err);
@@ -38,9 +38,7 @@ router.post("/", jsonParser, async (req, res) => {
 	try {
 		const personaje: Personaje = req.body;
 
-		console.log(personaje);
-
-		await create(personaje);
+		await create(req.app?.locals.db, personaje);
 
 		res.status(200).send("personaje creado");
 	} catch (err) {
@@ -55,7 +53,7 @@ router.put("/", jsonParser, async (req, res) => {
 
 		console.log(personaje);
 
-		const rowsAffected = await update(personaje);
+		const rowsAffected = await update(req.app?.locals.db, personaje);
 
 		if (!rowsAffected) {
 			res.status(404).send("personaje no encontrado");
@@ -79,7 +77,7 @@ router.delete("/:id", async (req, res) => {
 			return;
 		}
 
-		const rowsAffected = await deleteById(id);
+		const rowsAffected = await deleteById(req.app?.locals.db, id);
 
 		if (!rowsAffected) {
 			res.status(404).send("personaje no encontrado");
