@@ -40,7 +40,6 @@ router.post("/", jsonParser, async (req, res) => {
 
 		console.log(personaje);
 
-		// Hay que checkear rowsAffeced?
 		await create(personaje);
 
 		res.status(200).send("personaje creado");
@@ -56,8 +55,12 @@ router.put("/", jsonParser, async (req, res) => {
 
 		console.log(personaje);
 
-		// Hay que checkear rowsAffeced? x2
-		await update(personaje);
+		const rowsAffected = await update(personaje);
+
+		if (!rowsAffected) {
+			res.status(404).send("personaje no encontrado");
+			return;
+		}
 
 		res.status(200).send("personaje actualizado");
 	} catch (err) {
@@ -76,8 +79,12 @@ router.delete("/:id", async (req, res) => {
 			return;
 		}
 
-		// Hay que checkear rowsAffeced? x3 :o
-		await deleteById(id);
+		const rowsAffected = await deleteById(id);
+
+		if (!rowsAffected) {
+			res.status(404).send("personaje no encontrado");
+			return;
+		}
 
 		res.status(200).send("personaje eliminado");
 	} catch (err) {

@@ -17,7 +17,7 @@ export const getById = async (id: number): Promise<IRecordSet<Personaje>> => {
 	return response.recordset;
 };
 
-export const create = async (personaje: Personaje): Promise<number[]> => {
+export const create = async (personaje: Personaje): Promise<number> => {
 	const request = await connect();
 	const response = await request
 		.input("nombre", sql.VarChar(255), personaje.nombre ?? "")
@@ -26,10 +26,10 @@ export const create = async (personaje: Personaje): Promise<number[]> => {
 		.input("peso", sql.Int, personaje.peso ?? 0)
 		.input("historia", sql.VarChar(600), personaje.historia ?? "")
 		.execute(`create`);
-	return response.rowsAffected;
+	return response.rowsAffected[0];
 };
 
-export const update = async (personaje: Personaje): Promise<number[]> => {
+export const update = async (personaje: Personaje): Promise<number> => {
 	if (!personaje.id) throw new Error("Id es requerida");
 	const request = await connect();
 	const response = await request
@@ -40,13 +40,13 @@ export const update = async (personaje: Personaje): Promise<number[]> => {
 		.input("peso", sql.Int, personaje.peso ?? 0)
 		.input("historia", sql.VarChar(600), personaje.historia ?? "")
 		.execute(`update`);
-	return response.rowsAffected;
+	return response.rowsAffected[0];
 };
 
-export const deleteById = async (id: number): Promise<number[]> => {
+export const deleteById = async (id: number): Promise<number> => {
 	const request = await connect();
 	const response = await request
 		.input("id", sql.Int, id)
 		.execute(`deleteById`);
-	return response.rowsAffected;
+	return response.rowsAffected[0];
 };
