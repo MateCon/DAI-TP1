@@ -34,9 +34,11 @@ router.get("/:id", async (req, res) => {
 	}
 });
 
-router.post("/", async (req, res) => {
+router.post("/", jsonParser, async (req, res) => {
 	try {
 		const personaje: Personaje = req.body;
+
+		console.log(personaje);
 
 		// Hay que checkear rowsAffeced?
 		await create(personaje);
@@ -48,9 +50,11 @@ router.post("/", async (req, res) => {
 	}
 });
 
-router.put("/", async (req, res) => {
+router.put("/", jsonParser, async (req, res) => {
 	try {
 		const personaje: Personaje = req.body;
+
+		console.log(personaje);
 
 		// Hay que checkear rowsAffeced? x2
 		await update(personaje);
