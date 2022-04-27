@@ -1,4 +1,4 @@
-import {Router } from "express";
+import { Router } from "express";
 import bodyParser from "body-parser";
 import { Personaje } from "../models/personaje";
 import { create, deleteById, getAll, getById, update } from "../services/personajeService";
