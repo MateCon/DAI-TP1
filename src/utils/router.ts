@@ -2,7 +2,7 @@ import { Application } from "express";
 import { readdirSync } from "fs";
 import { join } from "path";
 
-const controllerFolder = join(__dirname, "controllers");
+const controllerFolder = join(__dirname, "..", "controllers");
 
 const router = (app: Application): Application => {
 	readdirSync(controllerFolder).forEach((file: string) => {

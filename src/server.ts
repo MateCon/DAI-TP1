@@ -2,7 +2,7 @@ import express, { Application } from "express";
 import sql from "mssql";
 import bodyParser from "body-parser";
 import cors from "cors";
-import router from "./router";
+import router from "./utils/router";
 import config from "./utils/database";
 
 (async () => {
@@ -10,7 +10,7 @@ import config from "./utils/database";
 		const app: Application = router(express());
 		const port = 8080 || process.env.PORT;
 
-		const appPool = new sql.ConnectionPool(config)
+		const appPool = new sql.ConnectionPool(config);
 		app.locals.db = await appPool.connect();
 
 		app.use(cors());
@@ -24,7 +24,7 @@ import config from "./utils/database";
 		app.listen(port, () => {
 			console.log(`Server running on http://localhost:${port}`);
 		});
-	} catch(err) {
+	} catch (err) {
 		console.log(err);
 	}
 })();
