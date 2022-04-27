@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-import sql from "mssql";
+import { ConnectionPool } from "mssql";
 import bodyParser from "body-parser";
 import cors from "cors";
 import router from "./utils/router";
@@ -10,7 +10,7 @@ import config from "./utils/database";
 		const app: Application = router(express());
 		const port = 8080 || process.env.PORT;
 
-		const appPool = new sql.ConnectionPool(config);
+		const appPool = new ConnectionPool(config);
 		app.locals.db = await appPool.connect();
 
 		app.use(cors());
