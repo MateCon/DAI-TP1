@@ -1,4 +1,4 @@
-export class Personaje {
+export class Character {
 	id?: number;
 	nombre?: string;
 	edad?: number;

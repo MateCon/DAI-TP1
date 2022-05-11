@@ -1,8 +1,8 @@
 import sql, { ConnectionPool } from "mssql";
 import Filter from "../models/filter";
-import { Personaje } from "../models/personaje";
+import { Character } from "../models/character";
  
-export const getAll = async (db: ConnectionPool, query: Filter): Promise<Personaje[]> => {
+export const getAll = async (db: ConnectionPool, query: Filter): Promise<Character[]> => {
     let condiciones = [];
  
     if (query.nombres.length > 0) condiciones.push('nombre = ' + query.nombres
@@ -19,23 +19,23 @@ export const getAll = async (db: ConnectionPool, query: Filter): Promise<Persona
     const response = await db.request().query(`
         SELECT * FROM Personajes ${condicion !== "WHERE" ? condicion : ""};
     `);
-    return response.recordset as Personaje[];
+    return response.recordset as Character[];
 };
  
 export const getById = async (
     db: ConnectionPool,
     id: number
-): Promise<Personaje> => {
+): Promise<Character> => {
     const response = await db
         .request()
         .input("id", sql.Int, id)
         .execute(`getById`);
-    return response.recordset[0] as Personaje;
+    return response.recordset[0] as Character;
 };
  
 export const create = async (
     db: ConnectionPool,
-    personaje: Personaje
+    personaje: Character
 ): Promise<number> => {
     const response = await db
         .request()
@@ -50,7 +50,7 @@ export const create = async (
  
 export const update = async (
     db: ConnectionPool,
-    personaje: Personaje
+    personaje: Character
 ): Promise<number> => {
     if (!personaje.id) throw new Error("Id es requerida");
     const response = await db

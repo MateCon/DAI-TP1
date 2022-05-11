@@ -1,7 +1,7 @@
 import { Router } from "express";
 import bodyParser from "body-parser";
-import { Personaje } from "../models/personaje";
-import { create, deleteById, getAll, getById, update } from "../services/personajeService";
+import { Character } from "../models/character";
+import { create, deleteById, getAll, getById, update } from "../services/characterService";
 import Filter from "../models/filter";
 import { Authenticate } from "../utils/jwt.strategy";
  
@@ -23,7 +23,7 @@ router.get("/", Authenticate, async (req, res) => {
         };
         console.log(query, filter)
  
-        const personajes: Personaje[] = await getAll(req.app?.locals.db, filter);
+        const personajes: Character[] = await getAll(req.app?.locals.db, filter);
         res.status(200).json(personajes);
     } catch (err) {
         console.log(err);
@@ -40,7 +40,7 @@ router.get("/:id", Authenticate, async (req, res) => {
             return;
         }
  
-        const personaje: Personaje = await getById(req.app?.locals.db, id);
+        const personaje: Character = await getById(req.app?.locals.db, id);
         res.status(200).json(personaje);
     } catch (err) {
         console.log(err);
@@ -50,7 +50,7 @@ router.get("/:id", Authenticate, async (req, res) => {
  
 router.post("/", Authenticate, jsonParser, async (req, res) => {
     try {
-        const personaje: Personaje = req.body;
+        const personaje: Character = req.body;
  
         await create(req.app?.locals.db, personaje);
  
@@ -63,7 +63,7 @@ router.post("/", Authenticate, jsonParser, async (req, res) => {
  
 router.put("/", Authenticate, jsonParser, async (req, res) => {
     try {
-        const personaje: Personaje = req.body;
+        const personaje: Character = req.body;
  
         console.log(personaje);
  
