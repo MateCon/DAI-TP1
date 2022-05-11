@@ -1,8 +1,8 @@
 import { Router } from "express";
 import bodyParser from "body-parser";
-import Character from "../models/character";
-import { create, deleteById, getAll, getAllWithFilter, getById, update } from "../services/characterService";
-import Filter from "../models/characterFilter";
+import Film from "../models/Film";
+import { create, deleteById, getAll, getAllWithFilter, getById, update } from "../services/filmService";
+import Filter from "../models/filmFilter";
 import { Authenticate } from "../utils/jwt.strategy";
  
 const router = Router();
@@ -10,24 +10,14 @@ const jsonParser = bodyParser.json();
  
 router.get("/", Authenticate, async (req, res) => {
     try {
-        const query = {
-            nombres: req.query.nombres as string,
-            edades: req.query.edades as string,
-            pesos: req.query.pesos as string
-        };
- 
-        const filter: Filter = {
-            nombres: query.nombres?.split(",") ?? [],
-            edades: query.edades?.split(",") ?? [],
-            pesos: query.pesos?.split(",") ?? [],
-        };
+        let order: "ASC" | "DESC" = (req.query?.order as string) === "DESC" ? "DESC" : "ASC";
         
-        if (filter.nombres.length === 0 && filter.edades.length === 0 && filter.pesos.length === 0) {
-            const personajes: Character[] = await getAll(req.app?.locals.db);
-            res.status(200).json(personajes);
-            return;
-        }
-        const personajes: Character[] = await getAllWithFilter(req.app?.locals.db, filter);
+        const filter: Filter = {
+            titulo: req.query?.nombre as string,
+            order: order
+        };
+
+        const personajes: Film[] = await getAllWithFilter(req.app?.locals.db, filter);
         res.status(200).json(personajes);
     } catch (err) {
         console.log(err);
@@ -44,7 +34,7 @@ router.get("/:id", Authenticate, async (req, res) => {
             return;
         }
  
-        const personaje: Character = await getById(req.app?.locals.db, id);
+        const personaje: Film = await getById(req.app?.locals.db, id);
         res.status(200).json(personaje);
     } catch (err) {
         console.log(err);
@@ -54,7 +44,7 @@ router.get("/:id", Authenticate, async (req, res) => {
  
 router.post("/", Authenticate, jsonParser, async (req, res) => {
     try {
-        const personaje: Character = req.body;
+        const personaje: Film = req.body;
  
         await create(req.app?.locals.db, personaje);
  
@@ -67,7 +57,7 @@ router.post("/", Authenticate, jsonParser, async (req, res) => {
  
 router.put("/", Authenticate, jsonParser, async (req, res) => {
     try {
-        const personaje: Character = req.body;
+        const personaje: Film = req.body;
  
         const rowsAffected = await update(req.app?.locals.db, personaje);
  

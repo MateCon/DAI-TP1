@@ -1,8 +1,15 @@
 import sql, { ConnectionPool } from "mssql";
-import Filter from "../models/filter";
-import { Character } from "../models/character";
+import Character from "../models/character";
+import Filter from "../models/characterFilter";
+
+export const getAll = async (db: ConnectionPool): Promise<Character[]> => {
+    const response = await db
+        .request()
+        .execute(`getAllPersonajes`);
+    return response.recordset as Character[];
+};
  
-export const getAll = async (db: ConnectionPool, query: Filter): Promise<Character[]> => {
+export const getAllWithFilter = async (db: ConnectionPool, query: Filter): Promise<Character[]> => {
     let condiciones = [];
  
     if (query.nombres.length > 0) condiciones.push('nombre = ' + query.nombres
@@ -12,12 +19,13 @@ export const getAll = async (db: ConnectionPool, query: Filter): Promise<Charact
     if (query.pesos.length > 0) condiciones.push('peso = ' + query.pesos.join(` or peso = `));
  
     condiciones = condiciones.map(c => ` (${c}) `);
- 
     const condicion = "WHERE" + condiciones.join("and")
-    console.log(condicion)
- 
+
+    console.log(condicion);
+    
+
     const response = await db.request().query(`
-        SELECT * FROM Personajes ${condicion !== "WHERE" ? condicion : ""};
+        SELECT * FROM Personaje ${condicion !== "WHERE" ? condicion : ""};
     `);
     return response.recordset as Character[];
 };
@@ -29,7 +37,7 @@ export const getById = async (
     const response = await db
         .request()
         .input("id", sql.Int, id)
-        .execute(`getById`);
+        .execute(`getPersonajeById`);
     return response.recordset[0] as Character;
 };
  
@@ -44,7 +52,7 @@ export const create = async (
         .input("edad", sql.Int, personaje.edad ?? 0)
         .input("peso", sql.Int, personaje.peso ?? 0)
         .input("historia", sql.VarChar(600), personaje.historia ?? "")
-        .execute(`create`);
+        .execute(`createPersonaje`);
     return response.rowsAffected[0];
 };
  
@@ -61,7 +69,7 @@ export const update = async (
         .input("edad", sql.Int, personaje.edad ?? 0)
         .input("peso", sql.Int, personaje.peso ?? 0)
         .input("historia", sql.VarChar(600), personaje.historia ?? "")
-        .execute(`update`);
+        .execute(`updatePersonaje`);
     return response.rowsAffected[0];
 };
  
@@ -72,6 +80,6 @@ export const deleteById = async (
     const response = await db
         .request()
         .input("id", sql.Int, id)
-        .execute(`deleteById`);
+        .execute(`deletePersonajeById`);
     return response.rowsAffected[0];
 };
