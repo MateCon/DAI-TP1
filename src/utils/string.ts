@@ -9,3 +9,8 @@ export const getRandomString = () => {
   
     return result;
 };
+
+export const addZeroes = (str: string, length: number) => {
+  while(str.length < length) str = `0${str}`;
+  return str;
+};

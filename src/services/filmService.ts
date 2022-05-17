@@ -1,6 +1,7 @@
 import sql, { ConnectionPool } from "mssql";
 import Film from "../models/film";
 import Filter from "../models/filmFilter";
+import { getCurrDate } from "../utils/date";
  
 export const getAll = async (db: ConnectionPool): Promise<Film[]> => {
     const response = await db.request().execute(`getAllSeries`);
@@ -25,7 +26,7 @@ export const getById = async (
     const response = await db
         .request()
         .input("id", sql.Int, id)
-        .execute(`getSeriesById`);
+        .execute(`getSerieById`);
     return response.recordset[0] as Film;
 };
  
@@ -35,11 +36,11 @@ export const create = async (
 ): Promise<number> => {
     const response = await db
         .request()
-        .input("nombre", sql.VarChar(255), serie.titulo ?? "")
+        .input("titulo", sql.VarChar(255), serie.titulo ?? "")
         .input("imagen", sql.VarChar(255), serie.imagen ?? "")
-        .input("edad", sql.Int, serie.calificacion ?? 0)
-        .input("peso", sql.Date, serie.fechaCreacion ?? "")
-        .execute(`createSeries`);
+        .input("fechaCreacion", sql.Date, serie.fechaCreacion ?? getCurrDate())
+        .input("calificacion", sql.Int, serie.calificacion ?? "")
+        .execute(`createSerie`);
     return response.rowsAffected[0];
 };
  

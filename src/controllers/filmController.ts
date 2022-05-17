@@ -16,8 +16,13 @@ router.get("/", Authenticate, async (req, res) => {
             titulo: req.query?.nombre as string,
             order: order
         };
+        if (filter.titulo) {
+            const personajes: Film[] = await getAllWithFilter(req.app?.locals.db, filter);
+            res.status(200).json(personajes);
+            return;
+        }
 
-        const personajes: Film[] = await getAllWithFilter(req.app?.locals.db, filter);
+        const personajes: Film[] = await getAll(req.app?.locals.db);
         res.status(200).json(personajes);
     } catch (err) {
         console.log(err);
@@ -33,9 +38,9 @@ router.get("/:id", Authenticate, async (req, res) => {
             res.status(400).send("id is not a number");
             return;
         }
- 
-        const personaje: Film = await getById(req.app?.locals.db, id);
-        res.status(200).json(personaje);
+        
+        const film: Film = await getById(req.app?.locals.db, id);
+        res.status(200).json(film);
     } catch (err) {
         console.log(err);
         res.status(500).send("server error");
@@ -44,9 +49,9 @@ router.get("/:id", Authenticate, async (req, res) => {
  
 router.post("/", Authenticate, jsonParser, async (req, res) => {
     try {
-        const personaje: Film = req.body;
+        const film: Film = req.body;
  
-        await create(req.app?.locals.db, personaje);
+        await create(req.app?.locals.db, film);
  
         res.status(200).send("personaje creado");
     } catch (err) {
