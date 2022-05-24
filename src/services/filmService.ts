@@ -11,10 +11,14 @@ export const getAll = async (db: ConnectionPool): Promise<Film[]> => {
 export const getAllWithFilter = async (db: ConnectionPool, query: Filter): Promise<Film[]> => {
     let condicion = "";
  
-    if (query.titulo) condicion += `WHERE titulo = ${query.titulo}`
- 
+    if (query.titulo) condicion += `WHERE titulo LIKE '%${query.titulo}%'`
+
+    console.log(`
+    SELECT * FROM Serie ${condicion} ORDER BY fechaCreacion ${query.order};
+`);
+
     const response = await db.request().query(`
-        SELECT * FROM Serie ${condicion !== "WHERE" ? condicion : ""} ORDER BY titulo = ${query.order};
+        SELECT * FROM Serie ${condicion} ORDER BY fechaCreacion ${query.order};
     `);
     return response.recordset as Film[];
 };
@@ -52,11 +56,11 @@ export const update = async (
     const response = await db
         .request()
         .input("id", sql.Int, serie.id)
-        .input("nombre", sql.VarChar(255), serie.titulo ?? "")
+        .input("titulo", sql.VarChar(255), serie.titulo ?? "")
         .input("imagen", sql.VarChar(255), serie.imagen ?? "")
-        .input("edad", sql.Int, serie.calificacion ?? 0)
-        .input("peso", sql.Date, serie.fechaCreacion ?? 0)
-        .execute(`updateSeries`);
+        .input("calificacion", sql.Int, serie.calificacion ?? 0)
+        .input("fechaCreacion", sql.Date, serie.fechaCreacion ?? 0)
+        .execute(`updateSerie`);
     return response.rowsAffected[0];
 };
  
@@ -67,6 +71,6 @@ export const deleteById = async (
     const response = await db
         .request()
         .input("id", sql.Int, id)
-        .execute(`deleteSeriesById`);
+        .execute(`deleteSerieById`);
     return response.rowsAffected[0];
 };

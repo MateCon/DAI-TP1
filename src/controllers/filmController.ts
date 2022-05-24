@@ -13,17 +13,18 @@ router.get("/", Authenticate, async (req, res) => {
         let order: "ASC" | "DESC" = (req.query?.order as string) === "DESC" ? "DESC" : "ASC";
         
         const filter: Filter = {
-            titulo: req.query?.nombre as string,
+            titulo: req.query?.titulo as string,
             order: order
         };
+        
         if (filter.titulo) {
-            const personajes: Film[] = await getAllWithFilter(req.app?.locals.db, filter);
-            res.status(200).json(personajes);
+            const peliculas: Film[] = await getAllWithFilter(req.app?.locals.db, filter);
+            res.status(200).json(peliculas);
             return;
         }
 
-        const personajes: Film[] = await getAll(req.app?.locals.db);
-        res.status(200).json(personajes);
+        const peliculas: Film[] = await getAll(req.app?.locals.db);
+        res.status(200).json(peliculas);
     } catch (err) {
         console.log(err);
         res.status(500).send("server error");
@@ -53,7 +54,7 @@ router.post("/", Authenticate, jsonParser, async (req, res) => {
  
         await create(req.app?.locals.db, film);
  
-        res.status(200).send("personaje creado");
+        res.status(200).send("pelicula creada");
     } catch (err) {
         console.log(err);
         res.status(500).send("server error");
@@ -62,16 +63,16 @@ router.post("/", Authenticate, jsonParser, async (req, res) => {
  
 router.put("/", Authenticate, jsonParser, async (req, res) => {
     try {
-        const personaje: Film = req.body;
+        const pelicula: Film = req.body;
  
-        const rowsAffected = await update(req.app?.locals.db, personaje);
+        const rowsAffected = await update(req.app?.locals.db, pelicula);
  
         if (!rowsAffected) {
-            res.status(404).send("personaje no encontrado");
+            res.status(404).send("pelicula no encontrada");
             return;
         }
  
-        res.status(200).send("personaje actualizado");
+        res.status(200).send("pelicula actualizada");
     } catch (err) {
         console.log(err);
         res.status(500).send("server error");
@@ -91,11 +92,11 @@ router.delete("/:id", Authenticate, async (req, res) => {
         const rowsAffected = await deleteById(req.app?.locals.db, id);
  
         if (!rowsAffected) {
-            res.status(404).send("personaje no encontrado");
+            res.status(404).send("pelicula no encontrada");
             return;
         }
  
-        res.status(200).send("personaje eliminado");
+        res.status(200).send("pelicula eliminada");
     } catch (err) {
         console.log(err);
         res.status(500).send("server error");
