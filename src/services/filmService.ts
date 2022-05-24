@@ -1,4 +1,5 @@
 import sql, { ConnectionPool } from "mssql";
+import Character from "../models/character";
 import Film from "../models/film";
 import Filter from "../models/filmFilter";
 import { getCurrDate } from "../utils/date";
@@ -32,6 +33,17 @@ export const getById = async (
         .input("id", sql.Int, id)
         .execute(`getSerieById`);
     return response.recordset[0] as Film;
+};
+
+export const getCharactersInFilm = async (
+    db: ConnectionPool,
+    id: number
+): Promise<Character[]> => {
+    const response = await db
+        .request()
+        .input("id", sql.Int, id)
+        .execute(`getCharactersInSerie`);
+    return response.recordset as Character[];
 };
  
 export const create = async (

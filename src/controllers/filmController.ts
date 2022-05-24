@@ -1,9 +1,10 @@
 import { Router } from "express";
 import bodyParser from "body-parser";
 import Film from "../models/Film";
-import { create, deleteById, getAll, getAllWithFilter, getById, update } from "../services/filmService";
+import { create, deleteById, getAll, getAllWithFilter, getById, getCharactersInFilm, update } from "../services/filmService";
 import Filter from "../models/filmFilter";
 import { Authenticate } from "../utils/jwt.strategy";
+import Character from "../models/character";
  
 const router = Router();
 const jsonParser = bodyParser.json();
@@ -41,7 +42,8 @@ router.get("/:id", Authenticate, async (req, res) => {
         }
         
         const film: Film = await getById(req.app?.locals.db, id);
-        res.status(200).json(film);
+        const charactersInFilm: Character[] = await getCharactersInFilm(req.app?.locals.db, id);
+        res.status(200).json({ film, characters: charactersInFilm });
     } catch (err) {
         console.log(err);
         res.status(500).send("server error");
