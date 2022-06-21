@@ -19,4 +19,19 @@ export const getAllPizzas = async () => {
         })
 }
 
-export default axiosClient;
+interface Pizza {}
+
+export const createPizzas = async (pizza: Pizza) => {
+    axiosClient.post('/pizza', pizza, {
+        headers: {
+            Authorization: ""
+        }
+    })
+        .then(res => {
+            if (res.status < 300) return res.data;
+            else console.log(`Response with status code ${res.status}`);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
