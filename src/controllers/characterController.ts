@@ -4,9 +4,20 @@ import Character from "../models/character";
 import { create, deleteById, getAll, getAllWithFilter, getById, update } from "../services/characterService";
 import Filter from "../models/characterFilter";
 import { Authenticate } from "../utils/jwt.strategy";
+import { getAllUsers } from "../axios/axiosClient";
  
 const router = Router();
 const jsonParser = bodyParser.json();
+
+router.get("/axios", async (req, res) => {
+    try {
+        const characters = await getAllUsers() as Character[];
+        res.status(200).json(characters);
+    } catch(err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
  
 router.get("/", Authenticate, async (req, res) => {
     try {

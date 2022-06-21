@@ -12,7 +12,7 @@ const swaggerFile = require('../swagger_output.json');
 
 (async () => {
 	try {
-		const app: Application = express();
+		const app: Application = router(express());
 		const port = 8080 || process.env.PORT;
 
 		const appPool = new ConnectionPool(config);
