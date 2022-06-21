@@ -9,7 +9,7 @@ import { createCharacter, getAllUsers } from "../axios/axiosClient";
 const router = Router();
 const jsonParser = bodyParser.json();
 
-router.get("/axios", async (req, res) => {
+router.get("/axios", Authenticate, async (req, res) => {
     try {
         const characters = await getAllUsers() as Character[];
         res.status(200).json(characters);
@@ -19,7 +19,7 @@ router.get("/axios", async (req, res) => {
     }
 });
 
-router.post("/axios", async (req, res) => {
+router.post("/axios", Authenticate, async (req, res) => {
     try {
         const characters = await createCharacter(req.body as Character);
         res.status(200).json(characters);
