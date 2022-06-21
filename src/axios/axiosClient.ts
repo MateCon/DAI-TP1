@@ -22,7 +22,7 @@ export const getAllUsers = async () => {
 
 
 export const createCharacter = async (character: Character) => {
-    return axiosClient.get('character/')
+    return axiosClient.post('character/')
         .then(res => {
             if (res.status < 300) return res.data;
             else console.log(`Response with status code ${res.status}`);
