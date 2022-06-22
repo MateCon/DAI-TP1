@@ -19,9 +19,11 @@ router.get("/axios", Authenticate, async (req, res) => {
     }
 });
 
-router.post("/axios", Authenticate, async (req, res) => {
+router.post("/axios", Authenticate, jsonParser, async (req, res) => {
     try {
-        const characters = await createCharacter(req.body as Character);
+        const personaje: Character = req.body;
+        console.log(personaje);
+        const characters = await createCharacter(personaje);
         res.status(200).json(characters);
     } catch(err) {
         console.log(err);
