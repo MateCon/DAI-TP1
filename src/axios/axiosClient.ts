@@ -20,7 +20,6 @@ export const getAllUsers = async () => {
         })
 }
 
-
 export const createCharacter = async (character: Character) => {
     return axiosClient.post('character/', character)
         .then(res => {
