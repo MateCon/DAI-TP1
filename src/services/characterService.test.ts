@@ -5,6 +5,14 @@ import config from "../utils/database";
 test('get all characters', async () => {
 	const appPool = new ConnectionPool(config);
     const response = await characterService.getAll(appPool);
-    console.log(response);
-    // expect(sum(1, 2)).toBe(3);
+    expect(response).toBeTruthy();
+});
+
+test('create character', async () => {
+	const appPool = new ConnectionPool(config);
+    const response = await characterService.create(appPool, {
+        nombre: "Mate",
+        edad: 17
+    });
+    expect(response).toBe(1);
 });

@@ -1,4 +1,5 @@
 **/NODE_MODULES
 **/build
+**/coverage
 debug.log
 .env
