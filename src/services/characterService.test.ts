@@ -20,7 +20,8 @@ describe('character service', () => {
 
     it('gets by id', async () => {
         const appPool = await new ConnectionPool(config).connect();
-        const response = await characterService.getById(appPool, 1);
+        const [{ id }] = await characterService.getAll(appPool);
+        const response = await characterService.getById(appPool, id!);
         expect(response).toBeTruthy();
         expect(response.edad).toBeDefined();
     });
@@ -37,15 +38,17 @@ describe('character service', () => {
 
     it('updates', async () => {
         const appPool = await new ConnectionPool(config).connect();
-        await characterService.update(appPool, { id: 1, nombre: "Fausto" })
-        const response = await characterService.getById(appPool, 1);
+        const [{ id }] = await characterService.getAll(appPool);
+        await characterService.update(appPool, { id: id, nombre: "Fausto" })
+        const response = await characterService.getById(appPool, id!);
         expect(response).toBeTruthy();
         expect(response.nombre).toEqual("Fausto");
     });
 
     it('deletes', async () => {
         const appPool = await new ConnectionPool(config).connect();
-        const response = await characterService.deleteById(appPool, 1);
+        const [{ id }] = await characterService.getAll(appPool);
+        const response = await characterService.deleteById(appPool, id!);
         expect(response).toBe(1);
     });
 });

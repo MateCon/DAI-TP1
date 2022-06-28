@@ -21,9 +21,6 @@ export const getAllWithFilter = async (db: ConnectionPool, query: Filter): Promi
     condiciones = condiciones.map(c => ` (${c}) `);
     const condicion = "WHERE" + condiciones.join("and")
 
-    console.log(condicion);
-    
-
     const response = await db.request().query(`
         SELECT * FROM Personaje ${condicion !== "WHERE" ? condicion : ""};
     `);
