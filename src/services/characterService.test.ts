@@ -39,10 +39,10 @@ describe('character service', () => {
     it('updates', async () => {
         const appPool = await new ConnectionPool(config).connect();
         const [{ id }] = await characterService.getAll(appPool);
-        await characterService.update(appPool, { id: id, nombre: "Fausto" })
+        await characterService.update(appPool, { id: id, nombre: "Nombre" })
         const response = await characterService.getById(appPool, id!);
         expect(response).toBeTruthy();
-        expect(response.nombre).toEqual("Fausto");
+        expect(response.nombre).toEqual("Nombre");
     });
 
     it('deletes', async () => {
